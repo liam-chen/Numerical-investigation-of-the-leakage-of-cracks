@@ -196,8 +196,8 @@ def calc_P_ein_und_G_HEM(p_0, T_0, p_2, T_2, zeta_,A_): #beruecksichtigung des E
 #    return [round(G,2),round(V,6),P_ein,round(P_aus,4),kritisch] #G:Leckrate  V:Massenstrom
 
 
-T_0 = 170 + 273.15  #Stagnationstemperatur  K
-p_0 = 6          #Stagnationsdruck   MPa
+T_0 = 101 + 273.15  #Stagnationstemperatur  K
+p_0 = 5          #Stagnationsdruck   MPa
 T_2 = 20 + 273.1    #Umgebungstemperatur  K
 p_2 = 0.1           #Umgebungsdruck  MPa
 

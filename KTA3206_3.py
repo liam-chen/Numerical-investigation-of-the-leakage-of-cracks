@@ -153,18 +153,18 @@ def calc_P_ein_und_G_HEM(p_0, T_0, p_2, T_2, zeta_,A_): #beruecksichtigung des E
         G2_list.append(math.sqrt(2*(p_0-c)*1000000*rho_0))
     P_ein=c
     Zustand=calc_G_HEM_Zweiphasig(P_ein,T_0,p_2,T_2,zeta_)
-    G=Zustand[0]
+    G=Zustand[0]  #Massenstrom kg/m^2/s
     P_aus=Zustand[1]
     kritisch=Zustand[2]
-    V=G*A_/1000000  #Massenstrom kg/m^2/s
+    V=G*A_/1000   #g/s
     state_2=IAPWS97(T = T_2, P = p_2)
     rho_2=state_2.rho
-    print(p_0,T_0,G)
-    return [round(G,2),round(V,6),P_ein,round(P_aus,4),kritisch] #G:Leckrate  V:Massenstrom
+    print(p_0,T_0,G,V)
+    return [round(G,2),P_ein,round(P_aus,4),kritisch,p_s_0] #G:Leckrate  V:Massenstrom
 
 
-T_0 = 140 + 273.15  #Stagnationstemperatur  K
-p_0 = 20           #Stagnationsdruck   MPa
+T_0 = 170 + 273.15  #Stagnationstemperatur  K
+p_0 = 1          #Stagnationsdruck   MPa
 T_2 = 20 + 273.1    #Umgebungstemperatur  K
 p_2 = 0.1           #Umgebungsdruck  MPa
 
@@ -186,7 +186,7 @@ zeta=calc_zeta(s,D_h,Rz)   #Stroemungswiderstand
 #print(calc_G_modB_Einphasig(13.8,T_0,zeta))
 #print(calc_G_HEM_Zweiphasig(p_0,T_0,p_2,T_2,zeta))
 #print(calc_G_HEM_Zweiphasig_alt(p_0,T_0,p_2,T_2,zeta))
-#print(calc_P_ein_und_G_HEM(p_0,T_0,p_2,T_2,zeta,A))
+print(calc_P_ein_und_G_HEM(p_0,T_0,p_2,T_2,zeta,A))
 #
 #print('\n','modB')
 #
@@ -195,17 +195,17 @@ zeta=calc_zeta(s,D_h,Rz)   #Stroemungswiderstand
 
 ##unterschiedlicher Stagnationsdruck mit Beruecksichtigung des Eintrittsdruck
 #G_List=[]
-#Pstag_List=np.linspace(8,20,4)  #Die Serie des Stagnationsdrucks  Kann einen Fehler melden. falls Pstag ist 
-##Pstag_List=[1.75]+list(Pstag_List)
+#Pstag_List=np.linspace(1.5,6,10  )  #Die Serie des Stagnationsdrucks  Kann einen Fehler melden. falls Pstag ist 
+##Pstag_List=[0.2]+list(Pstag_List)
 #print(Pstag_List)
-#headers = ['Pstag','G','v','Pein','Paus','ob kritisch']  #fuer Tabelle
+#headers = ['Pstag','T','HEM_G','v','Pein','Paus','kritisch','saettigungsdruck']  #fuer Tabelle
 #rows = []  #fuer Tabelle
 #for P_stag in Pstag_List:
 #    Zustand=calc_P_ein_und_G_HEM(P_stag,T_0,p_2,T_2,zeta,A)
 #    G_List.append(Zustand[0])
-#    row=[P_stag]+Zustand
+#    row=[P_stag]+[T_0-273.15]+Zustand
 #    rows.append(row)
-#with open('Dh_HEM_1.csv','w',newline ='') as f:  #schreiben in ein Datei
+#with open('Dh_HEM_180.csv','w',newline ='') as f:  #schreiben in ein Datei
 #    f_csv = csv.writer(f)
 #    f_csv.writerow(headers)
 #    f_csv.writerows(rows)
@@ -214,28 +214,28 @@ zeta=calc_zeta(s,D_h,Rz)   #Stroemungswiderstand
 #plt.ylabel("G")
 #plt.plot(Pstag_List, G_List)
 
-#unterschiedlicher Temperatur
-G_List=[]
-Pstag_List=np.linspace(50,350,13)  #Die Serie des Stagnationsdrucks  Kann einen Fehler melden. falls Pstag ist 
-#Pstag_List=[1.75]+list(Pstag_List)
-print(Pstag_List)
-headers = ['Pstag','G','v','Pein','Paus','ob kritisch']  #fuer Tabelle
-rows = []  #fuer Tabelle
-for T_stag in Pstag_List:
-    G_b=calc_G_Benourlli(p_0, T_stag+ 273.15, p_2, T_2, zeta)
-    G_m_b=calc_G_modB_Einphasig(p_0,T_stag+ 273.15,zeta)
-    G_HEM=calc_P_ein_und_G_HEM(p_0, T_stag+ 273.15, p_2, T_2, zeta,A)
-#    G_List.append(Zustand)
-    row=[T_stag]+[G_b]+[G_m_b]+G_HEM
-    rows.append(row)
-with open('Dh_HEM.csv','w',newline ='') as f:  #schreiben in ein Datei
-    f_csv = csv.writer(f)
-    f_csv.writerow(headers)
-    f_csv.writerows(rows)
-#plt.figure(1)   #Diagramm zeichnen
-#plt.xlabel("Pstag in MPa")
-#plt.ylabel("G")
-#plt.plot(Pstag_List, G_List)
+##unterschiedlicher Temperatur
+#G_List=[]
+#Tstag_List=np.linspace(220,277,20)  #Die Serie des Stagnationsdrucks  Kann einen Fehler melden. falls Pstag ist 
+##Pstag_List=[1.75]+list(Pstag_List)
+#print(Tstag_List)
+#headers = ['Pstag','T','Benourlli','modB','HEM','Pein','Paus','kritisch','saettigungsdruck']  #fuer Tabelle
+#rows = []  #fuer Tabelle
+#for T_stag in Tstag_List:
+#    G_b=calc_G_Benourlli(p_0, T_stag+ 273.15, p_2, T_2, zeta)
+#    G_m_b=calc_G_modB_Einphasig(p_0,T_stag+ 273.15,zeta)
+#    G_HEM=calc_P_ein_und_G_HEM(p_0, T_stag+ 273.15, p_2, T_2, zeta,A)
+##    G_List.append(Zustand)
+#    row=[p_0]+[T_stag]+[G_b]+[G_m_b]+G_HEM
+#    rows.append(row)
+#with open('Dh_HEM.csv','w',newline ='') as f:  #schreiben in ein Datei
+#    f_csv = csv.writer(f)
+#    f_csv.writerow(headers)
+#    f_csv.writerows(rows)
+##plt.figure(1)   #Diagramm zeichnen
+##plt.xlabel("Pstag in MPa")
+##plt.ylabel("G")
+##plt.plot(Pstag_List, G_List)
 
 ##unterschiedlicher Stagnationsdruck mit Bernoulli
 #G_List=[]
@@ -257,7 +257,7 @@ with open('Dh_HEM.csv','w',newline ='') as f:  #schreiben in ein Datei
 #plt.xlabel("Pstag in MPa")
 #plt.ylabel("G")
 #plt.plot(Pstag_List, G_List)
-##
+###
 ##
 ##unterschiedlicher Stagnationsdruck mit modifizierte Bernoulli
 #G_List=[]
